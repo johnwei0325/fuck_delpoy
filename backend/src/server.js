@@ -15,6 +15,10 @@ import mongoose from 'mongoose'
 import { dataInit } from './upload'
 require('dotenv').config()
 const app = express()
+if (process.env.NODE_ENV === "development") {
+	
+}
+app.use(cors());
 if (process.env.NODE_ENV === "production") {
     const __dirname = path.resolve();
     app.use(express.static(path.join(__dirname, "../frontend", "build")));
@@ -23,9 +27,7 @@ if (process.env.NODE_ENV === "production") {
     });
   }
 // init middleware
-if (process.env.NODE_ENV === "development") {
-	app.use(cors());
-}
+
 app.use(express.json())
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
