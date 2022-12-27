@@ -15,23 +15,12 @@ import mongoose from 'mongoose'
 import { dataInit } from './upload'
 require('dotenv').config()
 const app = express()
-const corsOptions = {
-    optionsSuccessStatus: 200, // For legacy browser support
-    credentials: true, // This is important.
-    origin: "https://chalkcoin.io",
-};
 
 if (process.env.NODE_ENV === "development") {
-	app.use(cors(corsOptions));
+	app.use(cors());
 }
 
-if (process.env.NODE_ENV === "production") {
-    const __dirname = path.resolve();
-    app.use(express.static(path.join(__dirname, "../frontend", "build")));
-    app.get("/*", function (req, res) {
-      res.sendFile(path.join(__dirname, "../frontend", "build", "index.html"));
-    });
-  }
+
 // init middleware
 
 app.use(express.json())
@@ -42,7 +31,13 @@ app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Credentials', 'true')
     next()
 })
-
+if (process.env.NODE_ENV === "production") {
+    const __dirname = path.resolve();
+    app.use(express.static(path.join(__dirname, "../frontend", "build")));
+    app.get("/*", function (req, res) {
+      res.sendFile(path.join(__dirname, "../frontend", "build", "index.html"));
+    });
+  }
 const port = process.env.PORT || 4000
 const dboptions = {
     useNewUrlParser: true,
